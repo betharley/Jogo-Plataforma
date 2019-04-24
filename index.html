@@ -1,0 +1,227 @@
+<DOCTYPE html>
+<html>
+	<head>
+		<title>Engine em JS</title>
+	</head>
+	<body>
+		<canvas width="700" height="400" style="border: 1px solid"></canvas>
+	</body>
+
+	<script src="js/entitys/plataforma.js"></script>
+	<script src="js/entitys/estrela.js"></script>
+	<script src="js/entitys/moedas.js"></script>
+	<script src="js/entitys/grama.js"></script>
+	<script src="js/entitys/lava.js"></script>
+	<script src="js/entitys/banana.js"></script>
+	<script src="js/entitys/bloco.js"></script>
+	<script src="js/entitys/player.js"></script>
+	<script src="js/camera.js"></script>
+	<script src="js/gameover.js"></script>
+	<script src="js/over.js"></script>
+	<script src="js/cenario.js"></script>
+	<script src="js/fase3.js"></script>
+	<script src="js/fase2.js"></script>
+	<script src="js/fase1.js"></script>
+	<script src="js/menus.js"></script>
+	<script src="js/menu.js"></script>
+	<script src="js/game.js"></script>
+	
+
+<script type="text/javascript">
+
+	//CANVAS E CONTEXTO
+	var canvas = document.querySelector("canvas");
+	var contexto = canvas.getContext("2d");
+	
+	var contadorImg = 0;
+	
+var posX = 0;
+var posY = 0;
+canvas.addEventListener("click", function(evento){
+	posX = evento.clientX;
+	posY = evento.clientY;
+	console.log(posX + " / " + posY);
+});
+
+
+	var imgMenina = new Image();
+	imgMenina.src = "img/menina.png";
+	
+	var imgRobo = new Image();
+	imgRobo.src = "img/robo.png";
+
+	var imgMoeda = new Image();
+	imgMoeda.src = "img/moedas.png";
+
+	var imgTijolo = new Image();
+	imgTijolo.src = "img/tijolo.png"
+	
+	var imgCenario = new Image();
+	imgCenario.src = "img/cenario.png";
+
+	var imgCenarioMenu = new Image();
+	imgCenarioMenu.src = "img/cenarioMenu.png";
+
+	var imgGameOver = new Image();
+	imgGameOver.src = "img/gameover.png";
+
+	//FASE 2
+	var imgCenario2 = new Image();
+	imgCenario2.src = "img/cenario2.png";
+
+	var imgBanana = new Image();
+	imgBanana.src = "img/banana.png";
+
+	var imgGrama = new Image();
+	imgGrama.src = "img/grama.png";
+
+	//FASE 3
+	var imgEstrela = new Image();
+	imgEstrela.src = "img/estrela.png";
+	
+	var imgCenario3 = new Image();
+	imgCenario3.src = "img/cenario3.png";
+
+	var imgPlataforma = new Image();
+	imgPlataforma.src = "img/plataforma.png";
+	
+
+	var teclas = {
+		pula: true,
+		cancelarPulo: false,
+		verificar: true,
+		up: false,
+		down: false,
+
+		paused: false,
+	};
+
+	var game = new Game(contexto, teclas);
+
+
+	//CARREGA AS IMAGENS
+	imgMenina.addEventListener("load", function(){
+		carregarImg();	
+	});
+	imgRobo.addEventListener("load", function(){
+		carregarImg();	
+	});
+	imgMoeda.addEventListener("load", function(){
+		carregarImg();	
+	});
+	imgTijolo.addEventListener("load", function(){
+		carregarImg();	
+	});
+	imgCenario.addEventListener("load",function(){
+		carregarImg();
+	});
+	imgCenarioMenu.addEventListener("load", function(){
+		carregarImg();
+	});
+	imgGameOver.addEventListener("load", function(){
+		carregarImg();
+	});
+	imgBanana.addEventListener("load", function(){
+		carregarImg();
+	});
+	
+	//FASE 2
+	imgCenario2.addEventListener("load",function(){
+		carregarImg();
+	});
+	imgGrama.addEventListener("load",function(){
+		carregarImg();
+	});
+	
+
+	//FASE 3
+	imgEstrela.addEventListener("load",function(){
+		carregarImg();
+	});
+	imgCenario3.addEventListener("load",function(){
+		carregarImg();
+	});
+ 	imgPlataforma.addEventListener("load",function(){
+		carregarImg();
+	});
+
+	function carregarImg(){
+		contadorImg++;
+		if(contadorImg == 13){
+			game.ligar();
+		}
+	}
+
+	//console.log("INDEX: " + teclas.x);
+
+document.addEventListener("keydown", function(evento){
+	if(evento.keyCode == 32 && teclas.pula){
+		teclas.pula = false;
+		teclas.cancelarPulo = true;
+		//console.log("Tecla 32: " + evento.keyCode + " " + teclas.pula);
+		return;
+	}
+
+	if(evento.keyCode == 38 && teclas.verificar){
+		teclas.verificar = false;
+		teclas.up = true;
+		return;
+	}
+	if(evento.keyCode == 40 && teclas.verificar){
+		teclas.verificar = false;
+		teclas.down = true;
+		return;
+	}
+	//alert(evento.keyCode);
+
+	
+
+	teclas[evento.keyCode] = true;
+	//console.log("Pressionou Tecla: " + teclas[37]);
+}, false);
+
+document.addEventListener("keyup", function(evento){
+	if(evento.keyCode == 32 && teclas.pula == false){
+		teclas.pula = true;
+		//teclas.cancelarPulo = true;
+		//console.log("Tecla 32: " + evento.keyCode + " " + teclas.pula);
+		return;
+	}
+
+	if(evento.keyCode == 38 && !teclas.verificar){
+		teclas.verificar = true;
+		teclas.up = false;
+		return;
+	}
+	if(evento.keyCode == 40 && !teclas.verificar){
+		teclas.verificar = true;
+		teclas.down = false;
+		return;
+	}
+
+	delete teclas[evento.keyCode];
+	//teclas[evento.keyCode] = false;
+	//console.log("Liberou Tecla: " + teclas[37]);
+}, false);
+
+document.addEventListener("keypress", function(evento){
+	if(evento.keyCode == 13){
+		teclas.paused = !teclas.paused;
+		//console.log("KEYPRESS: ", teclas.paused);
+	}
+}, false);
+
+
+
+
+
+/*
+C:\Users\BC649910\Documents\Engine\index.html
+
+
+
+
+*/
+
+</script>
+</html>
